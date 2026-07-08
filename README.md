@@ -117,6 +117,19 @@ final class MyPlatformGenerator implements PassGenerator
 $wallet->registerGenerator(new MyPlatformGenerator());
 ```
 
+Lifecycle events
+---
+The package ships two platform-agnostic notification events:
+
+- `LauLamanApps\Wallet\Event\PassInstalledEvent` — a pass was added to a wallet
+- `LauLamanApps\Wallet\Event\PassUninstalledEvent` — a pass was removed from a wallet
+
+Each event carries the platform (`'apple'`, `'google'`, ...), the platform pass id (Apple serial
+number, Google object id) and the native platform event for consumers that need platform detail.
+The framework integrations dispatch them automatically: on Apple after a successful PassKit
+device (un)registration, on Google after a signature-verified save/delete callback. Listen once,
+cover every platform.
+
 Platform notes
 ---
 - **Apple**: the pass type identifier, team identifier and signing certificate are configured on
