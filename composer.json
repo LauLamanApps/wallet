@@ -20,38 +20,26 @@
             "email": "laurens.laman@llaman.nl"
         }
     ],
-    "repositories": [
-        {
-            "type": "path",
-            "url": "../apple-passbook",
-            "options": {
-                "symlink": true
-            }
-        },
-        {
-            "type": "path",
-            "url": "../google-wallet",
-            "options": {
-                "symlink": true
-            }
-        }
-    ],
     "autoload": {
         "psr-4": {
-            "LauLamanApps\\Wallet\\": ["src/"]
+            "LauLamanApps\\Wallet\\": [
+                "src/"
+            ]
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "LauLamanApps\\Wallet\\Tests\\": ["tests/"]
+            "LauLamanApps\\Wallet\\Tests\\": [
+                "tests/"
+            ]
         }
     },
     "require": {
         "php": "^8.1"
     },
     "require-dev": {
-        "laulamanapps/apple-passbook": "2.0.x-dev || ^2.0",
-        "laulamanapps/google-wallet": "*",
+        "laulamanapps/apple-passbook": "^2.0",
+        "laulamanapps/google-wallet": "^1.0",
         "phpstan/phpstan": "^2.0",
         "phpunit/phpunit": "^10.0|^11.0"
     },
@@ -63,5 +51,10 @@
     "prefer-stable": true,
     "config": {
         "bin-dir": "bin"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-main": "1.0.x-dev"
+        }
     }
 }
