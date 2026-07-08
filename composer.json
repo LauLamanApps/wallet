@@ -1,0 +1,67 @@
+{
+    "name": "laulamanapps/wallet",
+    "description": "Platform-agnostic SDK for generating mobile wallet passes (Apple Wallet, Google Wallet)",
+    "keywords": [
+        "wallet",
+        "pass",
+        "apple",
+        "google",
+        "pkpass",
+        "event ticket",
+        "coupon",
+        "loyalty",
+        "boarding pass",
+        "php"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Laurens Laman",
+            "email": "laurens.laman@llaman.nl"
+        }
+    ],
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../apple-passbook",
+            "options": {
+                "symlink": true
+            }
+        },
+        {
+            "type": "path",
+            "url": "../google-wallet",
+            "options": {
+                "symlink": true
+            }
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "LauLamanApps\\Wallet\\": ["src/"]
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "LauLamanApps\\Wallet\\Tests\\": ["tests/"]
+        }
+    },
+    "require": {
+        "php": "^8.1"
+    },
+    "require-dev": {
+        "laulamanapps/apple-passbook": "2.0.x-dev || ^2.0",
+        "laulamanapps/google-wallet": "*",
+        "phpstan/phpstan": "^2.0",
+        "phpunit/phpunit": "^10.0|^11.0"
+    },
+    "suggest": {
+        "laulamanapps/apple-passbook": "Required to generate Apple Wallet passes via the Apple bridge (^2.0)",
+        "laulamanapps/google-wallet": "Required to generate Google Wallet passes via the Google bridge (^1.0)"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "config": {
+        "bin-dir": "bin"
+    }
+}
