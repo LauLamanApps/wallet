@@ -98,6 +98,10 @@ final class GooglePassGenerator implements PassGenerator
             );
         }
 
+        foreach (array_slice($pass->getLocations(), 0, GenericObject::MAX_MERCHANT_LOCATIONS) as $location) {
+            $object->addMerchantLocation($location->getLatitude(), $location->getLongitude());
+        }
+
         if ($pass->isVoided()) {
             $object->setState(State::Inactive);
         }

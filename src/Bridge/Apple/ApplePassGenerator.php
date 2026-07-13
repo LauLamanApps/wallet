@@ -122,6 +122,10 @@ final class ApplePassGenerator implements PassGenerator
             $passbook->setExpirationDate($pass->getExpirationDate());
         }
 
+        if ($pass->getWebServiceUrl() !== null && $pass->getWebServiceAuthenticationToken() !== null) {
+            $passbook->setWebService($pass->getWebServiceUrl(), $pass->getWebServiceAuthenticationToken());
+        }
+
         if ($pass->isVoided()) {
             $passbook->voided();
         }

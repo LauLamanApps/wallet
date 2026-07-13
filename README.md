@@ -38,6 +38,7 @@ use LauLamanApps\Wallet\MetaData\Field;
 use LauLamanApps\Wallet\MetaData\FieldSection;
 use LauLamanApps\Wallet\MetaData\Image;
 use LauLamanApps\Wallet\MetaData\ImageType;
+use LauLamanApps\Wallet\MetaData\Location;
 use LauLamanApps\Wallet\Pass;
 use LauLamanApps\Wallet\PassType;
 
@@ -48,6 +49,13 @@ $pass->addBarcode(new Barcode(BarcodeFormat::Qr, '123456789'));
 $pass->addField(FieldSection::Primary, new Field('event', 'The Beach Boys', 'Event'));
 $pass->addField(FieldSection::Header, new Field('seat', '12A', 'Seat'));
 $pass->setRelevantDate(new DateTimeImmutable('2026-08-01T20:00:00+02:00'));
+
+// Surface the pass on the lock screen / as a notification near the venue (max 10 locations):
+$pass->addLocation(new Location(52.3676, 4.9041));
+
+// Enable pass updates and install/uninstall tracking (Apple PassKit Web Service; Google
+// tracks saves/deletions through class callbacks instead — see the google-wallet package):
+$pass->setWebService('https://passes.example.com/passkit', '<AuthenticationToken>');
 
 // Apple embeds image files in the pass; Google references public URLs.
 // Provide whichever the platforms you target need:
@@ -135,12 +143,15 @@ Platform notes
 - **Apple**: the pass type identifier, team identifier and signing certificate are configured on
   the apple-passbook `Compiler`; the bridge maps `PassType::LoyaltyCard` to Apple's `storeCard`
   style and `PassType::BoardingPass` to a generic transit type. Only images with a local path are
-  embedded (`ImageType::Hero` is Google-only).
+  embedded (`ImageType::Hero` is Google-only). Locations become pass `locations` (lock-screen
+  relevance); `setWebService()` becomes `webServiceURL`/`authenticationToken` in the pass.
 - **Google**: passes are generated as signed "Save to Google Wallet" links (no API call needed);
   all pass types are mapped to Google's generic pass with your fields as text modules. Only images
-  with a public URL are used (`ImageType::Logo` and `ImageType::Hero`/`ImageType::Strip`). For
-  Google-specific pass types (event ticket, offer, loyalty, transit objects) use
-  laulamanapps/google-wallet directly.
+  with a public URL are used (`ImageType::Logo` and `ImageType::Hero`/`ImageType::Strip`).
+  Locations become `merchantLocations` ("Nearby Passes" notifications, first 10 locations);
+  `setWebService()` is ignored — Google pushes updates through its REST API and reports
+  saves/deletions via class callbacks. For Google-specific pass types (event ticket, offer,
+  loyalty, transit objects) use laulamanapps/google-wallet directly.
 
 Credits
 ---

@@ -17,4 +17,9 @@ final class InvalidPassException extends Exception implements WalletException
     {
         return new self(sprintf('Image \'%s\' does not exist.', $path));
     }
+
+    public static function authenticationTokenTooShort(): self
+    {
+        return new self('The web service authentication token must be at least 16 characters long.');
+    }
 }

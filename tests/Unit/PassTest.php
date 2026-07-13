@@ -149,6 +149,29 @@ final class PassTest extends TestCase
         self::assertSame(4.9041, $location->getLongitude());
     }
 
+    public function testWebService(): void
+    {
+        $pass = $this->createPass();
+
+        self::assertNull($pass->getWebServiceUrl());
+        self::assertNull($pass->getWebServiceAuthenticationToken());
+
+        $pass->setWebService('https://example.com/passkit', 'vxwxd7J8AlNNFPS8k0a0FfUFtq0ewzFdc');
+
+        self::assertSame('https://example.com/passkit', $pass->getWebServiceUrl());
+        self::assertSame('vxwxd7J8AlNNFPS8k0a0FfUFtq0ewzFdc', $pass->getWebServiceAuthenticationToken());
+    }
+
+    public function testTooShortWebServiceAuthenticationTokenThrows(): void
+    {
+        $pass = $this->createPass();
+
+        $this->expectException(InvalidPassException::class);
+        $this->expectExceptionMessage('The web service authentication token must be at least 16 characters long.');
+
+        $pass->setWebService('https://example.com/passkit', 'too-short');
+    }
+
     public function testDatesAndVoid(): void
     {
         $pass = $this->createPass();

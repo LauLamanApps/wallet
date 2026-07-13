@@ -31,6 +31,8 @@ final class Pass
     private ?string $logoText = null;
     private ?DateTimeImmutable $relevantDate = null;
     private ?DateTimeImmutable $expirationDate = null;
+    private ?string $webServiceUrl = null;
+    private ?string $webServiceAuthenticationToken = null;
     private bool $voided = false;
 
     public function __construct(
@@ -182,6 +184,35 @@ final class Pass
     public function getExpirationDate(): ?DateTimeImmutable
     {
         return $this->expirationDate;
+    }
+
+    /**
+     * Registers a PassKit Web Service for pass updates and install/uninstall
+     * tracking. Only used by Apple Wallet: devices register themselves against
+     * the url using the token (Google tracks saves/deletions through class
+     * callbacks instead). Apple requires an authentication token of at least
+     * 16 characters.
+     *
+     * @throws InvalidPassException
+     */
+    public function setWebService(string $url, string $authenticationToken): void
+    {
+        if (strlen($authenticationToken) < 16) {
+            throw InvalidPassException::authenticationTokenTooShort();
+        }
+
+        $this->webServiceUrl = $url;
+        $this->webServiceAuthenticationToken = $authenticationToken;
+    }
+
+    public function getWebServiceUrl(): ?string
+    {
+        return $this->webServiceUrl;
+    }
+
+    public function getWebServiceAuthenticationToken(): ?string
+    {
+        return $this->webServiceAuthenticationToken;
     }
 
     public function void(): void

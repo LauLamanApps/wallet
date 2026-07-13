@@ -14,6 +14,7 @@ use LauLamanApps\Wallet\MetaData\Field;
 use LauLamanApps\Wallet\MetaData\FieldSection;
 use LauLamanApps\Wallet\MetaData\Image;
 use LauLamanApps\Wallet\MetaData\ImageType;
+use LauLamanApps\Wallet\MetaData\Location;
 use LauLamanApps\Wallet\Pass;
 use LauLamanApps\Wallet\PassType;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -52,6 +53,8 @@ final class GooglePassGeneratorTest extends TestCase
         $pass->addField(FieldSection::Back, new Field('terms', 'No refunds'));
         $pass->addImage(Image::fromUrl(ImageType::Logo, 'https://example.com/logo.png'));
         $pass->addImage(Image::fromUrl(ImageType::Hero, 'https://example.com/hero.png'));
+        $pass->addLocation(new Location(52.3676, 4.9041));
+        $pass->addLocation(new Location(51.9225, 4.47917));
         $pass->setRelevantDate(new DateTimeImmutable('2026-08-01T20:00:00+02:00'));
         $pass->setExpirationDate(new DateTimeImmutable('2026-08-02T02:00:00+02:00'));
 
@@ -88,6 +91,26 @@ final class GooglePassGeneratorTest extends TestCase
         );
         self::assertSame('2026-08-01T20:00:00+02:00', $object['validTimeInterval']['start']['date']);
         self::assertSame('2026-08-02T02:00:00+02:00', $object['validTimeInterval']['end']['date']);
+        self::assertSame(
+            [
+                ['latitude' => 52.3676, 'longitude' => 4.9041],
+                ['latitude' => 51.9225, 'longitude' => 4.47917],
+            ],
+            $object['merchantLocations']
+        );
+    }
+
+    public function testLocationsBeyondGoogleMaximumAreDropped(): void
+    {
+        $pass = new Pass('serial-1', PassType::Generic, 'Toy Town', 'Toy Town Membership');
+        for ($i = 0; $i < 12; $i++) {
+            $pass->addLocation(new Location(52.0 + $i / 100, 4.9));
+        }
+
+        $generator = new GooglePassGenerator($this->createSaveUrlFactory(), '3388000000012345678');
+        $claims = $this->decodeJwtClaims($generator->generate($pass)->getUrl());
+
+        self::assertCount(10, $claims['payload']['genericObjects'][0]['merchantLocations']);
     }
 
     public function testVoidedPassIsInactive(): void

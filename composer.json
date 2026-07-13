@@ -39,13 +39,13 @@
     },
     "require-dev": {
         "laulamanapps/apple-passbook": "^2.0",
-        "laulamanapps/google-wallet": "^1.0",
+        "laulamanapps/google-wallet": "^1.1",
         "phpstan/phpstan": "^2.0",
         "phpunit/phpunit": "^10.0|^11.0"
     },
     "suggest": {
         "laulamanapps/apple-passbook": "Required to generate Apple Wallet passes via the Apple bridge (^2.0)",
-        "laulamanapps/google-wallet": "Required to generate Google Wallet passes via the Google bridge (^1.0)"
+        "laulamanapps/google-wallet": "Required to generate Google Wallet passes via the Google bridge (^1.1)"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,

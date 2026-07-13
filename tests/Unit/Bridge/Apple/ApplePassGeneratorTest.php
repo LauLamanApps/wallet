@@ -62,6 +62,7 @@ final class ApplePassGeneratorTest extends TestCase
         $pass->addLocation(new Location(52.3676, 4.9041));
         $pass->setRelevantDate(new DateTimeImmutable('2026-08-01T20:00:00+02:00'));
         $pass->setExpirationDate(new DateTimeImmutable('2026-08-02T02:00:00+02:00'));
+        $pass->setWebService('https://example.com/passkit', 'vxwxd7J8AlNNFPS8k0a0FfUFtq0ewzFdc');
         $pass->void();
 
         (new ApplePassGenerator($this->createCompiler($passbook)))->generate($pass);
@@ -98,6 +99,8 @@ final class ApplePassGeneratorTest extends TestCase
         self::assertSame([['latitude' => 52.3676, 'longitude' => 4.9041]], $data['locations']);
         self::assertSame([['date' => '2026-08-01T20:00:00+02:00']], $data['relevantDates']);
         self::assertSame('2026-08-02T02:00:00+02:00', $data['expirationDate']);
+        self::assertSame('https://example.com/passkit', $data['webServiceURL']);
+        self::assertSame('vxwxd7J8AlNNFPS8k0a0FfUFtq0ewzFdc', $data['authenticationToken']);
         self::assertTrue($data['voided']);
 
         $images = $passbook->getImages();
